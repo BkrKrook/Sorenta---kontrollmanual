@@ -120,14 +120,14 @@ h1 { font-size:22px; margin:8px 0 2px; }
   .p-comment-print::before { content:"Kommentar: "; font-weight:700; font-style:normal; }
   .field input, .field textarea { border:none; border-bottom:1px solid #bbb; border-radius:0; padding:2px 2px; }
   .field textarea { resize:none; overflow:hidden; }
-  #forblad { display:block; break-after:page; page-break-after:always; border:none; padding:12mm 22mm 0; }
+  #forblad { display:block; break-after:page; page-break-after:always; border:none; padding:12mm 22mm 14mm; }
   #forblad .fb-summary { display:none; }
-  #forblad .fb-body { display:block; padding:0; font-size:12px; line-height:1.45; }
+  #forblad .fb-body { display:flex; flex-direction:column; min-height:calc(100vh - 26mm); padding:0; font-size:12px; line-height:1.45; }
   .fb-title { display:block; font-family:Cambria, Georgia, serif; font-size:24px; font-weight:700; letter-spacing:2px; color:#000; border-bottom:2px solid #E36C0A; padding-bottom:6px; margin-bottom:14px; }
   .fb-intro { margin:0 0 12px; text-align:justify; }
   .fb-list { margin:0; padding-left:18px; }
   .fb-list li { margin-bottom:10px; text-align:justify; }
-  .fb-logo { text-align:center; margin-top:58mm; }
+  .fb-logo { text-align:center; margin-top:auto; padding-top:14mm; }
   .fb-logo img { height:15mm; }
   /* Dölj skärmrubriken på utskriftens första sida - förbladet har egen titel */
   h1, .subtitle { display:none; }
