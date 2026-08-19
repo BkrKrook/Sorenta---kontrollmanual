@@ -119,6 +119,7 @@ h1 { font-size:22px; margin:8px 0 2px; }
   .p-comment-print:not(:empty) { display:block; grid-area:comment; padding-left:2px; font-style:italic; }
   .p-comment-print::before { content:"Kommentar: "; font-weight:700; font-style:normal; }
   .field input, .field textarea { border:none; border-bottom:1px solid #bbb; border-radius:0; padding:2px 2px; }
+  .field textarea { resize:none; overflow:hidden; }
   #forblad { display:block; break-after:page; page-break-after:always; border:none; padding:12mm 22mm 0; }
   #forblad .fb-summary { display:none; }
   #forblad .fb-body { display:block; padding:0; font-size:12px; line-height:1.45; }
@@ -394,6 +395,16 @@ h1 { font-size:22px; margin:8px 0 2px; }
   function addPhoto(id, rec) { (photos[id] = photos[id] || []).push(rec); }
   function todayIso() { return new Date().toISOString().slice(0, 10); }
 
+  // Textarea växer med innehållet. Utan detta göms text bakom en scrollbar,
+  // och allt som är dolt följer inte med till PDF-exporten.
+  function autoGrow(el) {
+    if (!el._minH) el._minH = el.offsetHeight;        // höjden som rows-attributet ger
+    el.style.height = 'auto';
+    var border = el.offsetHeight - el.clientHeight;   // box-sizing:border-box räknar in ramen
+    el.style.height = Math.max(el.scrollHeight + border, el._minH) + 'px';
+  }
+  function autoGrowAll() { document.querySelectorAll('textarea').forEach(autoGrow); }
+
   // ---------- Uppbyggnad av formuläret ----------
   function buildFields() {
     var host = byId('grunduppgifter');
@@ -653,6 +664,7 @@ h1 { font-size:22px; margin:8px 0 2px; }
     var text = [head].concat(t.lines).join('\n');
     var el = byId('ovrigt');
     if (el.value !== text) el.value = text;
+    autoGrow(el);
   }
   function setOvrigtStatus() {
     byId('ovrigt-status').textContent = ovrigtManual ? MANUAL_MSG : AUTO_MSG;
@@ -746,6 +758,7 @@ h1 { font-size:22px; margin:8px 0 2px; }
 
   document.addEventListener('input', function(e) {
     var t = e.target;
+    if (t.tagName === 'TEXTAREA') autoGrow(t);
     if (t.classList.contains('p-comment')) {
       var pt = t.closest('.point');
       syncCommentPrint(pt);
@@ -780,6 +793,7 @@ h1 { font-size:22px; margin:8px 0 2px; }
       byId('g-entreprenor').value.trim()
     ].filter(Boolean).join(' ');
     document.title = name || ORIGINAL_TITLE;
+    autoGrowAll();
     buildPrintBilder();
   });
   window.addEventListener('afterprint', function() {
@@ -787,6 +801,9 @@ h1 { font-size:22px; margin:8px 0 2px; }
     document.title = ORIGINAL_TITLE;
   });
   byId('btn-pdf').addEventListener('click', function() { window.print(); });
+
+  // Ny bredd (t.ex. när plattan vrids) radbryter om texten, så höjden måste räknas om.
+  window.addEventListener('resize', autoGrowAll);
 
   window.addEventListener('pagehide', saveNow);
   document.addEventListener('visibilitychange', function() {
@@ -825,6 +842,7 @@ h1 { font-size:22px; margin:8px 0 2px; }
       if (PT_BY_ID[pid]) renderThumbs(PT_BY_ID[pid]);
     });
     refresh();
+    autoGrowAll();
   });
 })();
 </script>
