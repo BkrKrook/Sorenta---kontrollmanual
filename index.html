@@ -790,7 +790,8 @@ h1 { font-size:22px; margin:8px 0 2px; }
     var name = [
       byId('g-datum').value || todayIso(),
       byId('g-plats').value.trim(),
-      byId('g-entreprenor').value.trim()
+      byId('g-entreprenor').value.trim(),
+      byId('g-taplan').value.trim()
     ].filter(Boolean).join(' ');
     document.title = name || ORIGINAL_TITLE;
     autoGrowAll();
